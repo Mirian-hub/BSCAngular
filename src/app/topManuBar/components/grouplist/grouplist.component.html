@@ -1,0 +1,45 @@
+<div class="grid__wrapper">
+  <!-- <div class="sample__header">
+    <igx-input-group>
+        <input class="gridSample__filter" igxInput type="text" placeholder="Filter by product name" (input)="filter($event)">
+    </igx-input-group><br>
+</div> -->
+  <igx-grid #grid1 [loadingGridTemplate]="true"   [data]="data" [rowSelection]="'multiple'" [displayDensity]="density" [showToolbar]="false"  [columnHiding]="true"  [autoGenerate]="false" [paging]="true"  id="grid1"  width="100%" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+ 
+    <igx-column field="id" header="id" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column field="name" header="name" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column field="format" header="format" [sortable]="true" [movable]="true"  >
+      </igx-column>
+      <igx-column field="key" header="key" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column field="code" header="code" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column field="groupKey" header="groupKey" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column field="groupName" header="groupName" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column field="groupId" header="groupId" [sortable]="true" [movable]="true" >
+      </igx-column>
+      <igx-column  [filterable]="false" width="80px" >
+        <ng-template igxCell let-cell="cell">
+            <button igxButton="icon" (click)="editBtnClick($event)">
+                <igx-icon>edit</igx-icon>
+            </button>
+        </ng-template>
+    </igx-column>
+    <igx-column  [filterable]="false" width="80px">
+      <ng-template igxCell let-cell="cell">
+          <button igxButton="icon" >
+              <igx-icon>search</igx-icon>
+          </button>
+      </ng-template>
+  </igx-column>
+  </igx-grid>
+  <div id="gridFooter"  >
+    <button type="button" class="btn btn-success"  id="deletBtn" > წაშლა </button>
+    <button type="button" class="btn btn-success"> დამატება </button>
+    <button type="button" class="btn btn-success"> ჯგუფის დამატება </button>
+  </div>
+</div>

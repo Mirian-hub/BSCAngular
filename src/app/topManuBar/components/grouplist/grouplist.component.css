@@ -1,0 +1,10 @@
+table {
+    width: 100%;
+}
+#grid1 {
+    height:77vh !important;
+}
+.btn  {
+    padding: 5px !important;
+    margin: 3px;
+}
