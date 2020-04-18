@@ -1,110 +1,81 @@
-import { Component, OnInit, ViewChild, SystemJsNgModuleLoader, EventEmitter, Output } from '@angular/core';
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-import {SelectionModel} from '@angular/cdk/collections';
-import { IgxGridComponent, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from 'igniteui-angular';
-import { HtmlAstPath } from '@angular/compiler';
-// tslint:disable-next-line: import-spacing
-import { filter, map } from 'rxjs/operators';
-import { IgxFilteringService } from 'igniteui-angular/lib/grids/filtering/grid-filtering.service';
-// import { UserService } from '..../shared/user.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AgGridModule, AgGridAngular } from 'ag-grid-angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { finalize, count } from 'rxjs/operators';
+import { ListViewModel } from '../clientModels/listTableModel';
+import { Variable } from '@angular/compiler/src/render3/r3_ast';
+import {TabService} from '../../tab.service';
 import { TopManuBarComponent } from '../../topManuBar.component';
-import { ObserveOnMessage } from 'rxjs/internal/operators/observeOn';
-declare const myFunc: any;
 /** Constants used to fill up our data base. */
 
 // tslint:disable-next-line: class-name
-export interface listViewModel {
-  id: string;
-  name: string;
-  format: string;
-  key: string;
-  code: string;
-  groupId: string;
-  groupKey: string;
-  groupName: string;
-}
-export interface groupViewModel {
-  groupId: string;
-  groupKey: string;
-  groupName: string;
-}
+
 @Component({
   selector: 'app-grouplist',
   templateUrl: './grouplist.component.html',
   styleUrls: ['./grouplist.component.css']
 })
 export class GrouplistComponent implements OnInit {
-  @ViewChild('grid1', { read: IgxGridComponent, static: true })
-  @Output() myEvent = new EventEmitter();
-  public listViewResponse: listViewModel[];
-  public grid1: IgxGridComponent;
-
-  public data: listViewModel[];
-  public groupData: groupViewModel[];
+  private searchValue: string;
+  private gridApi;
+  @ViewChild('grid', null) grid: any;
+  constructor(private http: HttpClient, private service: TabService, private topManuBar: TopManuBarComponent ) { }
   public density = 'comfortable';
-  public displayDensities;
-  readonly BaseUrl = 'http://localhost:49946/api/';
+  resData: ListViewModel[];
+  resColumnames: string[];
+  resOb: Observable<string>;
 
-  constructor(private http: HttpClient, private topManubarCompnent: TopManuBarComponent) {
-    // Assign the data to the data source for the table to render
-   }
- public getListView(): Observable<listViewModel[]> {
-  return this.http.get<listViewModel[]>(this.BaseUrl + 'listview' + '/1500');
- }
-  public ngOnInit(): void {
-  this.getListView().subscribe(data => this.data = data);
+    columnDefs = [
+      ];
+
+rowData: any;
+
+ngOnInit() {
+  let counter = 0;
+  let counterCheck = 0;
+  // tslint:disable-next-line: max-line-length
+  this.rowData = this.http.get<ListViewModel[]>('http://localhost:49946/api/listview/' + TabService.selectedOperationId);
+  this.http.get<ListViewModel[]>('http://localhost:49946/api/listview/' + TabService.selectedOperationId).subscribe(
+      // tslint:disable-next-line: max-line-length
+      data => { this.resData = data; console.log(this.resData[0].colNames);
+               
+                this.resData[0].colNames.forEach(element => {
+                counter++;
+                // chechBoxSelectoi swora ar jdeba
+                if( element !== 'empty') {
+                  if(counterCheck === 0 ){
+                    this.columnDefs.push({headerName: element, field: 'col' + counter,
+                                          sortable: true, filter: true, editable: true, checkboxSelection: true });
+                  } else {
+                      this.columnDefs.push({headerName: element, field: 'col' + counter,
+                                            sortable: true, filter: true, editable: true, selection: true });
+                    }
+                  counterCheck++;
+                  }
+                }
+              );
+              this.columnDefs.push({headerName: 'ჯგუფის კოდი', field: 'groupKey', sortable: true, filter: true });
+              this.columnDefs.push({headerName: 'ჯგუფის სახელი', field: 'groupName' , sortable: true, filter: true });
+            },
+      (error) => alert(error),
+      () => {this.grid.api.setColumnDefs(this.columnDefs); }
+      );
 }
-  public selectDensity(event) {
-    this.density = this.displayDensities[event.index].label;
-    this.grid1.displayDensity = this.displayDensities[event.index].label;
-    this.grid1.reflow();
+
+public onEditBtnClick() {
+    this.topManuBar.addNewTab(event, 600101, true);
+  // const val = (event.target as HTMLInputElement);
+  // this.service.termCode = val.closest('.igx-display-container').childNodes[4].childNodes[3].textContent;
+  // this.service.termName = val.closest('.igx-display-container').childNodes[2].childNodes[3].textContent;
+  // this.service.termFormat = val.closest('.igx-display-container').childNodes[3].childNodes[3].textContent;
+  // this.service.groupDatasource = this.data.filter((element, i, arr) => arr.findIndex(t => t.col1 == element.col1) === i);
+ };
+ public onGridReady(par) {
+ this.gridApi = par.api;
  }
-
-  public formatDate(val) {
-      if (val !== 'Select All') {
-          return new Intl.DateTimeFormat('en-US').format(val);
-      } else {
-          return val;
-      }
-  }
-
-  public formatCurrency(val: string) {
-      return parseInt(val, 10).toFixed(2);
-  }
-  public onGridLoad() {
-    myFunc();
-  }
- public addNewEditTab(event) {
- }
-
- public editBtnClick() {
-   // tslint:disable-next-line: deprecation
-   // tslint:disable-next-line: prefer-const
-  // let distinctGroupList: groupViewModel[];
-  // distinctGroupList = [];
-  // const firstObjct = { groupId: this.data[0].groupId,
-  //                      groupKey: this.data[0].groupKey,
-  //                     groupName: this.data[0].groupName }
-  // distinctGroupList.push(this.data[0]);
-  // this.data.forEach(element => {
-  //   let toAdd: boolean;
-  //   // tslint:disable-next-line: prefer-for-of
-  //   for (let i = 0; i < distinctGroupList.length; i++) {
-  //     if ( distinctGroupList[i].groupId === element.groupId) {
-  //       toAdd = false;
-  //     } else {
-  //     toAdd = true;
-  //     }
-  //   }
-  //   if ( toAdd ) {
-  //     const tmpObj = { groupId: element.groupId, groupKey: element.groupKey, groupName: element.groupName };
-  //     distinctGroupList.push(tmpObj);
-  //   }
-  // });
-  // tslint:disable-next-line: deprecation
-  this.topManubarCompnent.addNewTab(event, true);
+ public searchinGrid() {
+   this.gridApi.setQuickFilter(this.searchValue);
  }
 
 }

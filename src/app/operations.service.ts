@@ -12,7 +12,7 @@ export class OperationsService {
   operationValues: any = [] ;
   operationNamesFin: any = [];
   operationValuesFfin: any = [] ;
-
+  selectedOperationId: number;
 
   constructor(private http: HttpClient) {
    }
@@ -35,7 +35,8 @@ export class OperationsService {
       this.operationValues.forEach(element => {
         this.operationValuesFfin.push(element);
       });
-      return this.operationValuesFfin;
+      return this.operationValuesFfin; 
+      let tmp = 9;
      }
    }
 }

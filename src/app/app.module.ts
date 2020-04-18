@@ -23,14 +23,19 @@ import { TabContentComponent } from './topManuBar/tab-content.component';
 import { ContentContainerDirective } from './topManuBar/content-container.directive';
 import { Comp2Component } from './topManuBar/components/comp2.component';
 import { AppRoutingModul, RoutingComponent } from './app-routing.modul';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SignInComponent } from './sing-in/sing-in.component';
 import { TableListViewComponent } from './topManuBar/components/tableListview/tableListview.component';
 import { GrouplistComponent } from './topManuBar/components/grouplist/grouplist.component';
 import { MatFormFieldModule, MatInputModule, MatRippleModule } from '@angular/material';
 import {EditFormComponent} from './topManuBar/components/editForm/editForm.component';
-import { IgxGridModule, IgxButtonGroupModule } from "igniteui-angular";
-
+import { IgxGridModule, IgxButtonGroupModule } from 'igniteui-angular';
+import { NameEditorComponent } from './name-editor/name-editor.component';
+import { ProfileEditorComponent } from './profile-editor/profile-editor.component';
+import {SupplierComponent} from './topManuBar/components/supplier/supplier.component';
+import {MatProgressSpinnerModule} from '@angular/material';
+import { AgGridModule } from 'ag-grid-angular';
+  
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +52,10 @@ import { IgxGridModule, IgxButtonGroupModule } from "igniteui-angular";
     SignInComponent,
     TableListViewComponent,
     GrouplistComponent,
-    EditFormComponent
+    EditFormComponent,
+    NameEditorComponent,
+    ProfileEditorComponent,
+    SupplierComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,8 +78,11 @@ import { IgxGridModule, IgxButtonGroupModule } from "igniteui-angular";
     MatRippleModule,
     MatCheckboxModule,
     IgxGridModule,
-    IgxButtonGroupModule
-  ],
+    IgxButtonGroupModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    AgGridModule.withComponents([])
+    ],
   providers: [],
   bootstrap: [
     AppComponent
@@ -80,7 +91,9 @@ import { IgxGridModule, IgxButtonGroupModule } from "igniteui-angular";
     TableListViewComponent,
     GrouplistComponent,
     Comp2Component,
-    EditFormComponent
+    EditFormComponent,
+    SupplierComponent,
+
   ],
 })
 export class AppModule {

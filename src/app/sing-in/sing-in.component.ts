@@ -15,14 +15,11 @@ export class SignInComponent implements OnInit {
    Password: ''
   };
     constructor(private service: UserService, private router: Router) { }
-  
     ngOnInit() {
     }
-  
     onSubmit(form: NgForm) {
      this.service.login(form.value).subscribe (
        (res: any) => {
-         console.log(res);
          if (res != null) {
           localStorage.setItem('userId', res);
           this.router.navigateByUrl('/main');
@@ -33,4 +30,3 @@ export class SignInComponent implements OnInit {
      );
     }
   }
-  

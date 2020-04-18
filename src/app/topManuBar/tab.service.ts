@@ -1,12 +1,16 @@
-import { Injectable } from "@angular/core";
-import { Tab } from "./tab.model";
-import { TableListViewComponent } from "./components/tableListview/tableListview.component";
-import { BehaviorSubject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Tab } from './tab.model';
+import { TableListViewComponent } from './components/tableListview/tableListview.component';
+import { BehaviorSubject } from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
+
 export class TabService {
+  static selectedOperationId: number;
   public tabs: Tab[] = [
-    new Tab(TableListViewComponent, "Comp1 View", { parent: "AppComponent" })  ];
+   new Tab(TableListViewComponent, 'Comp1 View', { parent: 'AppComponent' })  ];
 
   public tabSub = new BehaviorSubject<Tab[]>(this.tabs);
 
@@ -19,6 +23,7 @@ export class TabService {
   }
 
   public addTab(tab: Tab) {
+    // tslint:disable-next-line: prefer-for-of
     for (let i = 0; i < this.tabs.length; i++) {
       if (this.tabs[i].active === true) {
         this.tabs[i].active = false;
@@ -29,8 +34,4 @@ export class TabService {
     this.tabs.push(tab);
     this.tabSub.next(this.tabs);
   }
-
-
-
-
 }
